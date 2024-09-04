@@ -25,6 +25,11 @@ spec:
     - locationName: canadacentral
   consistencyPolicy:
     defaultConsistencyLevel: Session
+  operatorSpec:
+    secrets:
+      primaryMasterKey:
+        name: azure-keys
+        key: cosmos-key
 
 ---
 

@@ -14,11 +14,6 @@ jobs:
       - name: Get code
         uses: actions/checkout@v4
 
-      - name: Setup Azure CLI 
-        uses: azure/cli@v1
-        with:
-          azcliversion: latest
-
       - name: Login to Azure
         uses: azure/login@v1
         with:
@@ -28,10 +23,13 @@ jobs:
         uses: azure/setup-kubectl@v3
         with:
           version: latest
-
-      - name: Get AKS credentials
-        run: |
-          az aks get-credentials --resource-group autio-web --name test-k8
+                
+      - name: Setup Azure CLI 
+        uses: azure/cli@v1
+        with:
+          azcliversion: latest
+          inlinescript: |
+            az aks get-credentials --resource-group autio-web --name test-k8            
 
       - name: Apply K8 manifests
         run: |
