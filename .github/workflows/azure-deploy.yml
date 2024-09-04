@@ -1,6 +1,7 @@
 name: Setup Azure Resources
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
