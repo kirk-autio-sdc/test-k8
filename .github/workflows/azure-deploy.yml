@@ -24,12 +24,11 @@ jobs:
         with:
           version: latest
                 
-      - name: Setup Azure CLI 
-        uses: azure/cli@v1
-        with:
-          azcliversion: latest
-          inlinescript: |
-            az aks get-credentials --resource-group autio-web --name test-k8            
+      - name: Set AKS context
+        run: |
+          az aks get-credentials --resource-group autio-web --name test-k8 --overwrite-existing        
+        env:
+          AZURE_SUBSRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Apply K8 manifests
         run: |
