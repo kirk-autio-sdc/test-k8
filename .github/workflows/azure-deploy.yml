@@ -1,0 +1,45 @@
+name: Setup Azure Resources
+
+on:
+  push:
+    branches:
+      - main
+  
+jobs:
+  setup-zure:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get code
+        uses: actions/checkout@v4
+
+      - name: Setup Azure CLI 
+        uses: azure/cli@v1
+        with:
+          azcliversion: latest
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: latest
+
+      - name: Get AKS credentials
+        run: |
+          az aks get-credentials --resource-group autio-web --name test-k8
+
+      - name: Apply K8 manifests
+        run: |
+          kubectl apply -f workflows/aso.yml
+
+      - name: Verify ASO Resources
+        run: |
+          kubectl get all -n default
+
+      - name: Wait for resources to be ready
+        run: |
+          kubectl wait --for=condition=Ready sqldatabase/test-db
