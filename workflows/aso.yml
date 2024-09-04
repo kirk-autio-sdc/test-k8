@@ -1,0 +1,44 @@
+apiVersion: resources.azure.com/v1api20200601
+kind: ResourceGroup
+metadata:
+  name: autio-web
+  namespace: default
+spec:
+  location: canadacentral
+  tags:
+    environment: DEV
+
+---
+
+apiVersion: documentdb.azure.com/v1api20231115
+kind: DatabaseAccount
+metadata:
+  name: autio-cosmos-db
+  namespace: default
+spec:
+  location: canadacentral
+  owner:
+    name: autio-web
+  kind: GlobalDocumentDB
+  databaseAccountOfferType: Standard
+  locations:
+    - locationName: canadacentral
+  consistencyPolicy:
+    defaultConsistencyLevel: Session
+
+---
+
+apiVersion: documentdb.azure.com/v1api20231115
+kind: SqlDatabase
+metadata:
+  name: test-db
+  namespace: default
+spec:
+  location: canadacentral
+  owner:
+    name: autio-cosmos-db
+  resource:
+    id: test-db
+  options:
+    autoscaleSettings:
+      maxThroughput: 100
