@@ -10,6 +10,10 @@ jobs:
   setup-azure:
     runs-on: ubuntu-latest
 
+    concurrency:
+      group: deploy-main
+      cancel-in-progress: false
+      
     steps:
       - name: Get code
         uses: actions/checkout@v4
