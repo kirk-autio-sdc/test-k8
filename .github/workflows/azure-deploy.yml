@@ -7,7 +7,7 @@ on:
       - main
   
 jobs:
-  setup-zure:
+  setup-azure:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,6 +23,11 @@ jobs:
         uses: azure/setup-kubectl@v3
         with:
           version: latest
+          
+      - name: Install kubelogin
+        run: |
+          sudo az aks install-cli  # This installs kubectl if not already installed
+          sudo apt-get install kubelogin -y  # Install kubelogin for AAD auth
                 
       - name: Set AKS context
         run: |
