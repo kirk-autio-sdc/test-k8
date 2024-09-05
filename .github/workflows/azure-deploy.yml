@@ -27,7 +27,7 @@ jobs:
       - name: Install kubelogin
         uses: azure/use-kubelogin@v1
         with:
-          kubelogin-version: 'latest''
+          kubelogin-version: 'latest'
                 
       - name: Set AKS context
         run: |
