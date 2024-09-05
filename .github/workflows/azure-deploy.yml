@@ -24,7 +24,8 @@ jobs:
         with:
           version: latest
           
-      - uses: azure/use-kubelogin@v1
+      - name: Install kubelogin
+        uses: azure/use-kubelogin@v1
         with:
           kubelogin-version: 'latest''
                 
