@@ -24,7 +24,7 @@ jobs:
         with:
           version: latest
           
-      - name: azure/use-kubelogin@v1
+      - uses: azure/use-kubelogin@v1
         with:
           kubelogin-version: 'latest''
                 
