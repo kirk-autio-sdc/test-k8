@@ -24,10 +24,9 @@ jobs:
         with:
           version: latest
           
-      - name: Install kubelogin
-        run: |
-          sudo az aks install-cli  # This installs kubectl if not already installed
-          sudo apt-get install kubelogin -y  # Install kubelogin for AAD auth
+      - name: azure/use-kubelogin@v1
+        with:
+          kubelogin-version: 'latest''
                 
       - name: Set AKS context
         run: |
