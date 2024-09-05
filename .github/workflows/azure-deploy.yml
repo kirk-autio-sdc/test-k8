@@ -27,17 +27,6 @@ jobs:
       - name: Set AKS context
         run: |
           az aks get-credentials --resource-group autio-web --name test-k8 --overwrite-existing        
-        env:
-          AZURE_SUBSRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      - name: Apply K8 manifests
-        run: |
           kubectl apply -f workflows/aso.yml
-
-      - name: Verify ASO Resources
-        run: |
           kubectl get all -n default
-
-      - name: Wait for resources to be ready
-        run: |
           kubectl wait --for=condition=Ready sqldatabase/test-db
