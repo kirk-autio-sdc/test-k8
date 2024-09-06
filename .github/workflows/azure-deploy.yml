@@ -22,54 +22,14 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Set Azure environment variables
-        run: |
-          export AZURE_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          export AZURE_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}
-          export AZURE_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}
-          export AZURE_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}
             
       - name: Set AKS context
-        uses: azure/aks-set-context@v3
-        with:
-          resource-group: 'autio-web'
-          cluster-name: 'test-k8'
-          
-      - name: Set up kubelogin for non-interactive login
-        uses: azure/use-kubelogin@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          kubelogin-version: 'latest'
+        run: |
+          az aks get-credentials --resource-group autio-web --name test-k8 --override-existing
           
       - name: Test
         run: |
           az group list
           kubectl get nodes
           
-      - name: Helm tool installer
-        uses: Azure/setup-helm@v4
-
-      - name: Install ASO using Helm
-        run: |
-          helm repo add aso2 https://raw.githubusercontent.com/Azure/azure-service-operator/main/v2/charts
-          helm repo update
-          helm upgrade --install aso2 aso2/azure-service-operator \
-            --create-namespace \
-            --namespace aso-system \
-            --set crds.enabled=true \
-            --set azureManagedIdentity.clientID=${{secrets.AZURE_CLIENT_ID}}
-            --set crdPattern='resources.azure.com/*;containerservice.azure.com/*;keyvault.azure.com/*;managedidentity.azure.com/*;eventhub.azure.com/*;documentdb.azure.com/*'
-            
-      - name: Apply ASO manifests
-        run: |
-          kubectl apply -f workflows/aso.yml
-          
-      - name: Verify ASO Resources
-        run: |
-          kubectl get all -n azure-resources
-        
-      - name: Wait for resources to be ready
-        run: |
-          kubectl wait --for=condition=Ready sqldatabase/test-db
+    
