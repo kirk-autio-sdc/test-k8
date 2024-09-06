@@ -36,6 +36,10 @@ jobs:
           resource-group: 'autio-web'
           cluster-name: 'test-k8'
           
+      - name: Install kubelogin
+        run: |
+          sudo az aks install-cli
+          
       - name: Helm tool installer
         uses: Azure/setup-helm@v4
 
