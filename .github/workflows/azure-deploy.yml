@@ -35,7 +35,6 @@ jobs:
         with:
           resource-group: 'autio-web'
           cluster-name: 'test-k8'
-          admin: true
           
       - name: Set up kubelogin for non-interactive login
         uses: azure/use-kubelogin@v1
