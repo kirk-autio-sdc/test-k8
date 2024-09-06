@@ -30,17 +30,27 @@ jobs:
           
       - name: Helm tool installer
         uses: Azure/setup-helm@v4
-          
+        
+      - name: Set SECRETS in AKS
+        run: |
+          cat <<EOF | kubectl apply -f -                                                                               
+            apiVersion: v1
+            kind: Secret
+            metadata:
+              name: aso-credential
+              namespace: default
+            stringData:
+              AZURE_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+              AZURE_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
+              AZURE_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
+              AZURE_CLIENT_SECRET: "${{ AZURE_CLIENT_SECRET }}"
+              EOF
+
       - name: Install ASO using Helm
-        env:
-          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
         run: |
           helm repo add aso2 https://raw.githubusercontent.com/Azure/azure-service-operator/main/v2/charts
           helm repo update
-          helm install azure-service-operator aso2/azure-service-operator \
+          helm upgrade --install aso2 aso2/azure-service-operator \
             --create-namespace \
             --namespace aso-system \
             --set crds.enabled=true \
