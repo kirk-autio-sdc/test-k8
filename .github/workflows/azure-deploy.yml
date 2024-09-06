@@ -31,11 +31,10 @@ jobs:
           export AZURE_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}
             
       - name: Set AKS context
-        uses: azure/aks-set-context@v1
+        uses: azure/aks-set-context@v3
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-          resource-group: autio-web
-          cluster-name: test-k8
+          resource-group: 'autio-web'
+          cluster-name: 'test-k8'
           
       - name: Helm tool installer
         uses: Azure/setup-helm@v4
