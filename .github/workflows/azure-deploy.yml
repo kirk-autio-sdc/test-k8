@@ -33,12 +33,16 @@ jobs:
         run: |
           kubelogin convert-kubeconfig -l azurecli
 
-      - name: Ensure proper context
+      - name: Apply K8 manifests
         run: |
-          kubectl config get-contexts 
+          kubectl apply -f workflows/aso.yml
 
-      - name: Test kubectl connection
+      - name: Verify ASO Resources
         run: |
-          kubectl get nodes
+          kubectl get all -n default
+
+      - name: Wait for resources to be ready
+        run: |
+          kubectl wait --for=condition=Ready sqldatabase/test-db
           
     
