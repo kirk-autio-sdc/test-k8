@@ -29,6 +29,10 @@ jobs:
         with:
           kubelogin-version: 'latest'
           
+      - name: Convert kubeconfig to use Azure CLI Authentication
+        run: |
+          kubelogin convert-kubeconfig -l azurecli
+          
       - name: Set AKS context
         run: |
           az aks get-credentials --resource-group autio-web --name test-k8
