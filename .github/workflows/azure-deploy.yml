@@ -16,11 +16,7 @@ jobs:
       
     steps:
       - name: Get code
-        uses: actions/checkout@v4
-
-      - name: Login to Azure
-        run: |
-          az login --service-principal --username ${{ secrets.AZURE_CLIENT_ID }} --password ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+        uses: actions/checkout@v4      
           
       - name: Set up kubelogin for non-interactive login
         uses: azure/use-kubelogin@v1
@@ -32,6 +28,10 @@ jobs:
       - name: Convert kubeconfig to use Azure CLI Authentication
         run: |
           kubelogin convert-kubeconfig -l azurecli
+          
+      - name: Login to Azure
+        run: |
+          az login --service-principal --username ${{ secrets.AZURE_CLIENT_ID }} --password ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
           
       - name: Set AKS context
         run: |
