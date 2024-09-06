@@ -18,6 +18,13 @@ jobs:
         run: |
           az login --service-principal --username ${{ secrets.AZURE_CLIENT_ID }} --password ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
 
+      - name: Install kubelogin
+        run: |
+          sudo az aks install-cli  # Installs kubectl
+          curl -Lo kubelogin https://github.com/Azure/kubelogin/releases/download/v0.0.24/kubelogin-linux-amd64.zip
+          unzip kubelogin-linux-amd64.zip -d /usr/local/bin/
+          chmod +x /usr/local/bin/kubelogin
+        
       - name: Set AKS context
         run: |
           az aks get-credentials --resource-group autio-web --name test-k8 --overwrite-existing
