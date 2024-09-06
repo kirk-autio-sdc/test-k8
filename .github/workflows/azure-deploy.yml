@@ -9,39 +9,28 @@ on:
 jobs:
   setup-azure:
     runs-on: ubuntu-latest
-
-    concurrency:
-      group: deploy-main
-      cancel-in-progress: false
       
     steps:
       - name: Get code
-        uses: actions/checkout@v4      
-          
-      - name: Set up kubelogin for non-interactive login
-        uses: azure/use-kubelogin@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          kubelogin-version: 'latest'
-          
-      - name: Convert kubeconfig to use Azure CLI Authentication
-        run: |
-          kubelogin convert-kubeconfig -l azurecli
-          
-      - name: Login to Azure
+        uses: actions/checkout@v4
+
+      - name: Login to Azure using Service Principal
         run: |
           az login --service-principal --username ${{ secrets.AZURE_CLIENT_ID }} --password ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
-          
+
       - name: Set AKS context
         run: |
-          az aks get-credentials --resource-group autio-web --name test-k8
-          
+          az aks get-credentials --resource-group autio-web --name test-k8 --overwrite-existing
+
+      - name: Set up kubelogin for non-interactive login
+        run: |
+          kubelogin convert-kubeconfig -l azurecli
+
       - name: Ensure proper context
         run: |
           kubectl config get-contexts 
-          
-      - name: Test
+
+      - name: Test kubectl connection
         run: |
           kubectl get nodes
           
