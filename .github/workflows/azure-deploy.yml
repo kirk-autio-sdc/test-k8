@@ -44,6 +44,11 @@ jobs:
         with:
           kubelogin-version: 'latest'
           
+      - name: Test
+        run: |
+          az group list
+          kubectl get nodes
+          
       - name: Helm tool installer
         uses: Azure/setup-helm@v4
 
