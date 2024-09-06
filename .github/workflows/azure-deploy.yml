@@ -23,10 +23,19 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Set AKS context
+      - name: Set Azure environment variables
         run: |
-          az aks get-credentials --resource-group autio-web --name test-k8 --overwrite-existing  
-          az aks install-cli
+          export AZURE_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          export AZURE_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}
+          export AZURE_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}
+          export AZURE_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}
+            
+      - name: Set AKS context
+        uses: azure/aks-set-context@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          resource-group: autio-web
+          cluster-name: test-k8
           
       - name: Helm tool installer
         uses: Azure/setup-helm@v4
@@ -39,10 +48,7 @@ jobs:
             --create-namespace \
             --namespace aso-system \
             --set crds.enabled=true \
-            --set azureSubscriptionID=${{secrets.AZURE_SUBSCRIPTION_ID}}
-            --set azureTenantID=${{secrets.AZURE_TENANT_ID}}
-            --set azureClientID=${{secrets.AZURE_CLIENT_ID}}
-            --set azureClientSecret=${{secrets.AZURE_CLIENT_SECRET}}
+            --set azureManagedIdentity.clientID=${{secrets.AZURE_CLIENT_ID}}
             --set crdPattern='resources.azure.com/*;containerservice.azure.com/*;keyvault.azure.com/*;managedidentity.azure.com/*;eventhub.azure.com/*;documentdb.azure.com/*'
             
       - name: Apply ASO manifests
