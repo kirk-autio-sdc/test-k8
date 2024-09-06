@@ -25,7 +25,7 @@ jobs:
             
       - name: Set AKS context
         run: |
-          az aks get-credentials --resource-group autio-web --name test-k8 --override-existing
+          az aks get-credentials --resource-group autio-web --name test-k8 --overwrite-existing
           
       - name: Test
         run: |
