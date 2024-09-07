@@ -57,10 +57,10 @@ jobs:
 
       - name: Verify ASO Resources
         run: |
-          kubectl get all -n azure-resources
+          kubectl -n azure-resources get pods
 
       - name: Wait for resources to be ready
         run: |
-          kubectl wait --for=condition=Ready sqldatabase/test-db
+          kubectl wait --for=condition=Ready sqldatabase.documentdb.azure.com/test-db
           
     
