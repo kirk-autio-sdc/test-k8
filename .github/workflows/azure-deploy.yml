@@ -49,12 +49,7 @@ jobs:
             --create-namespace \
             --namespace aso-system \
             --set crds.enabled=true \
-            --set crdPattern='resources.azure.com/*;containerservice.azure.com/*;keyvault.azure.com/*;managedidentity.azure.com/*;eventhub.azure.com/*;documentdb.azure.com/*'
-                    
-      - name: Remove old config
-        run: |
-          kubectl delete -f workflows/aso.yml
-          kubectl delete secret/aso-credential -n azure-resources        
+            --set crdPattern='resources.azure.com/*;containerservice.azure.com/*;keyvault.azure.com/*;managedidentity.azure.com/*;eventhub.azure.com/*;documentdb.azure.com/*'                   
           
       - name: Add ASO config
         run: |
