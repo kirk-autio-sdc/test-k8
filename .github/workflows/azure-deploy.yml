@@ -57,7 +57,7 @@ jobs:
 
       - name: Verify ASO Resources
         run: |
-          kubectl get all -n default
+          kubectl get all -n azure-resources
 
       - name: Wait for resources to be ready
         run: |
