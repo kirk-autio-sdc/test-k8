@@ -10,7 +10,7 @@ metadata:
 apiVersion: resources.azure.com/v1api20200601
 kind: ResourceGroup
 metadata:
-  name: autio-web
+  name: test-aso
   namespace: azure-resources
 spec:
   location: canadacentral
@@ -27,7 +27,7 @@ metadata:
 spec:
   location: canadacentral
   owner:
-    name: autio-web
+    name: test-aso
   kind: GlobalDocumentDB
   databaseAccountOfferType: Standard
   locations:
