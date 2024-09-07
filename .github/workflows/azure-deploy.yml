@@ -49,10 +49,6 @@ jobs:
             --create-namespace \
             --namespace aso-system \
             --set crds.enabled=true \
-            --set azure.subscriptionID=${{ secrets.AZURE_SUBSCRIPTION_ID }} \
-            --set azure.tenantID=${{ secrets.AZURE_TENANT_ID }} \
-            --set azure.clientID=${{ secrets.AZURE_CLIENT_ID }} \
-            --set azure.clientSecret=${{ secrets.AZURE_CLIENT_SECRET }}
             --set crdPattern='resources.azure.com/*;containerservice.azure.com/*;keyvault.azure.com/*;managedidentity.azure.com/*;eventhub.azure.com/*;documentdb.azure.com/*'
 
       - name: Apply K8 manifests
