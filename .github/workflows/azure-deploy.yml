@@ -53,9 +53,7 @@ jobs:
                     
       - name: Remove old config
         run: |
-          kubectl delete sqldatabase.documentdb.azure.com/test-db
-          kubectl delete databaseaccount.documentdb.azure.com/autio-cosmos-db
-          kubectl delete resourcegroup.resources.azure.com/test-aso
+          kubectl delete -f workflows/aso.yml
           kubectl delete secret/aso-credential -n azure-resources        
           
       - name: Add ASO config
