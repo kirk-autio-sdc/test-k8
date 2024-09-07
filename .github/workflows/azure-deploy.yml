@@ -51,6 +51,12 @@ jobs:
             --set crds.enabled=true \
             --set crdPattern='resources.azure.com/*;containerservice.azure.com/*;keyvault.azure.com/*;managedidentity.azure.com/*;eventhub.azure.com/*;documentdb.azure.com/*'
 
+
+      - name: Delete existing
+        run: |
+          kubectl delete all --all -n azure-resources
+          kubectl delete secret/aso-credential -n aso-system
+          
       - name: Set environment variables
         run: |
           export AZURE_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSRIPTION_ID }}
@@ -65,7 +71,7 @@ jobs:
           kind: Secret
           metadata:
             name: aso-credential
-            namespace: aso-system
+            namespace: azure-resources
           stringData:
             AZURE_SUBSCRIPTION_ID: "$AZURE_SUBSCRIPTION_ID"
             AZURE_TENANT_ID: "$AZURE_TENANT_ID"
