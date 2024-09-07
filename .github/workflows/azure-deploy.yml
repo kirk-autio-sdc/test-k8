@@ -50,12 +50,6 @@ jobs:
             --namespace aso-system \
             --set crds.enabled=true \
             --set crdPattern='resources.azure.com/*;containerservice.azure.com/*;keyvault.azure.com/*;managedidentity.azure.com/*;eventhub.azure.com/*;documentdb.azure.com/*'
-
-
-      - name: Delete existing
-        run: |
-          kubectl delete all --all -n azure-resources
-          kubectl delete secret/aso-credential -n aso-system
                     
       - name: Add ASO config
         run: |
@@ -78,7 +72,7 @@ jobs:
 
       - name: Verify ASO Resources
         run: |
-          kubectl -n azure-resources get pods
+          kubectl -n azure-resources get all
 
       - name: Wait for resources to be ready
         run: |
