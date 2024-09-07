@@ -55,6 +55,13 @@ jobs:
         run: |
           cat <<EOF | kubectl apply -f -
           apiVersion: v1
+          kind: Namespace
+          metadata:
+            name: azure-resources
+            labels:
+              name: azure-resources
+          ---
+          apiVersion: v1
           kind: Secret
           metadata:
             name: aso-credential
