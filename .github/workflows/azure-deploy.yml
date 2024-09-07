@@ -51,6 +51,10 @@ jobs:
             --set crds.enabled=true \
             --set crdPattern='resources.azure.com/*;containerservice.azure.com/*;keyvault.azure.com/*;managedidentity.azure.com/*;eventhub.azure.com/*;documentdb.azure.com/*'
                     
+      - name: Remove old config
+        run: |
+          kubectl delete secret/aso-credential -n azure-resources
+          
       - name: Add ASO config
         run: |
           cat <<EOF | kubectl apply -f -
