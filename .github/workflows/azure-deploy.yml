@@ -53,7 +53,10 @@ jobs:
                     
       - name: Remove old config
         run: |
-          kubectl delete secret/aso-credential -n azure-resources
+          kubectl delete sqldatabase.documentdb.azure.com/test-db
+          kubectl delete databaseaccount.documentdb.azure.com/autio-cosmos-db
+          kubectl delete resourcegroup.resources.azure.com/test-aso
+          kubectl delete secret/aso-credential -n azure-resources        
           
       - name: Add ASO config
         run: |
@@ -69,6 +72,10 @@ jobs:
             AZURE_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
             AZURE_CLIENT_SECRET: "${{ secrets.AZURE_CLIENT_SECRET }}"
           EOF
+          
+      - name: Verify ASO config
+        run: |
+          kubectl describe secret aso-credential
         
       - name: Apply K8 manifests
         run: |
