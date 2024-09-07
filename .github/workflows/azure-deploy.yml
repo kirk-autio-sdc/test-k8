@@ -56,14 +56,7 @@ jobs:
         run: |
           kubectl delete all --all -n azure-resources
           kubectl delete secret/aso-credential -n aso-system
-          
-      - name: Set environment variables
-        run: |
-          export AZURE_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSRIPTION_ID }}
-          export AZURE_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}
-          export AZURE_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}
-          export AZURE_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}
-          
+                    
       - name: Add ASO config
         run: |
           cat <<EOF | kubectl apply -f -
@@ -73,10 +66,10 @@ jobs:
             name: aso-credential
             namespace: azure-resources
           stringData:
-            AZURE_SUBSCRIPTION_ID: "$AZURE_SUBSCRIPTION_ID"
-            AZURE_TENANT_ID: "$AZURE_TENANT_ID"
-            AZURE_CLIENT_ID: "$AZURE_CLIENT_ID"
-            AZURE_CLIENT_SECRET: "$AZURE_CLIENT_SECRET"
+            AZURE_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSRIPTION_ID }}"
+            AZURE_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
+            AZURE_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
+            AZURE_CLIENT_SECRET: "${{ secrets.AZURE_CLIENT_SECRET }}"
           EOF
         
       - name: Apply K8 manifests
