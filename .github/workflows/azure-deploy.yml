@@ -64,8 +64,8 @@ jobs:
           apiVersion: v1
           kind: Secret
           metadata:
-            name: aso-system
-            namespace: azure-resources
+            name: aso-credential
+            namespace: aso-system
           stringData:
             AZURE_SUBSCRIPTION_ID: "$AZURE_SUBSCRIPTION_ID"
             AZURE_TENANT_ID: "$AZURE_TENANT_ID"
