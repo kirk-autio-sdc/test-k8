@@ -78,5 +78,6 @@ jobs:
       - name: Deploy API manifests
         run: |
           kubectl apply -f workflows/deployments.yml
+          kubectl apply -f workflows/services.yml
           
     
