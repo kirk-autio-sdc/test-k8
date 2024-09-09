@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: test-api-container
-          image: testk8registry/k8test-api
+          image: testk8registry.azurecr.io/k8test-api
           env:
             - name: COSMOS_CONNECTION
               valueFrom:
@@ -42,8 +42,7 @@ spec:
     spec:
       containers:
         - name: other-api-container
-          image: testk8registry/k8other-api
-          imagePullPolicy: Never
+          image: testk8registry.azurecr.io/k8other-api
           env:
             - name: COSMOS_CONNECTION
               valueFrom:
