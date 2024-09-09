@@ -49,7 +49,7 @@ jobs:
             --create-namespace \
             --namespace aso-system \
             --set crds.enabled=true \
-            --set crdPattern='resources.azure.com/*;containerservice.azure.com/*;keyvault.azure.com/*;managedidentity.azure.com/*;eventhub.azure.com/*;documentdb.azure.com/*'                           
+            --set crdPattern='resources.azure.com/*;containerservice.azure.com/*;keyvault.azure.com/*;managedidentity.azure.com/*;eventhub.azure.com/*;documentdb.azure.com/*;microsoft.containerregistry.azure.com/*'                           
         
       - name: Apply K8 manifests
         run: |
@@ -58,21 +58,29 @@ jobs:
       - name: Verify ASO Resources
         run: |
           kubectl -n aso-system get all
+          
+      - name: Wait for resources to be ready
+        run: |
+          kubectl wait --for=condition=Ready -n aso-system ContainerRegistry testk8aksregistry
+          
+      - name: Login to Container Registry
+        run: |
+          az acr login --name testk8aksregistry
 
       - name: Build K8Test image
         working-directory: K8Test
-        run: docker build -t k8test-api .
+        run: |
+          docker build -t testk8aksregistry/k8test-api .
+          docker push testk8aksregistry/k8test-api
           
       - name: Build K8OtherApi image
         working-directory: K8OtherAPI
-        run: docker build -t k8other-api .
+        run: |
+          docker build -t testk8aksregistry/k8other-api .
+          docker push testk8aksregistry/k8other-api
           
       - name: Deploy API manifests
         run: |
           kubectl apply -f workflows/deployments.yml
-
-      - name: Wait for resources to be ready
-        run: |
-          kubectl wait --for=condition=Ready sqldatabase.documentdb.azure.com/test-db -n aso-system
           
     
