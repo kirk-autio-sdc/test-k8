@@ -14,13 +14,7 @@ spec:
     spec:
       containers:
         - name: test-api-container
-          image: testk8registry.azurecr.io/k8test-api
-          env:
-            - name: COSMOS_CONNECTION
-              valueFrom:
-                secretKeyRef:
-                  name: azure-keys
-                  key: cosmos-key        
+          image: testk8registry.azurecr.io/k8test-api 
           ports:
             - containerPort: 8080
 
@@ -43,11 +37,5 @@ spec:
       containers:
         - name: other-api-container
           image: testk8registry.azurecr.io/k8other-api
-          env:
-            - name: COSMOS_CONNECTION
-              valueFrom:
-                secretKeyRef:
-                  name: azure-keys
-                  key: cosmos-key
           ports:
             - containerPort: 8080
