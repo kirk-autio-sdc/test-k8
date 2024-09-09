@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-api
+  template:
+    metadata:
+      labels:
+        app: test-api
+    spec:
+      containers:
+        - name: test-api-container
+          image: testAPI
+          imagePullPolicy: Never
+          env:
+            - name: COSMOS_CONNECTION
+              valueFrom:
+                secretKeyRef:
+                  name: azure-keys
+                  key: cosmos-key        
+          ports:
+            - containerPort: 8080
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: other-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: other-api
+  template:
+    metadata:
+      labels:
+        app: other-api
+    spec:
+      containers:
+        - name: other-api-container
+          image: otherAPI
+          imagePullPolicy: Never
+          env:
+            - name: COSMOS_CONNECTION
+              valueFrom:
+                secretKeyRef:
+                  name: azure-keys
+                  key: cosmos-key
+          ports:
+            - containerPort: 8080

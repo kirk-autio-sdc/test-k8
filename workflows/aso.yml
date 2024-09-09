@@ -1,10 +1,10 @@
 apiVersion: resources.azure.com/v1api20200601
 kind: ResourceGroup
 metadata:
-  name: autio-web
-  namespace: azure-resources
+  name: test-k8
+  namespace: aso-system
 spec:
-  location: canadacentral
+  location: canadaeast
   tags:
     environment: DEV
 
@@ -13,16 +13,16 @@ spec:
 apiVersion: documentdb.azure.com/v1api20231115
 kind: DatabaseAccount
 metadata:
-  name: autio-cosmos-db
-  namespace: azure-resources
+  name: test-k8-cosmos
+  namespace: aso-system
 spec:
-  location: canadacentral
+  location: canadaeast
   owner:
-    name: autio-web
+    name: test-k8
   kind: GlobalDocumentDB
   databaseAccountOfferType: Standard
   locations:
-    - locationName: canadacentral
+    - locationName: canadaeast
   consistencyPolicy:
     defaultConsistencyLevel: Session
   operatorSpec:
@@ -37,13 +37,13 @@ apiVersion: documentdb.azure.com/v1api20231115
 kind: SqlDatabase
 metadata:
   name: test-db
-  namespace: azure-resources
+  namespace: aso-system
 spec:
-  location: canadacentral
+  location: canadaeast
   owner:
-    name: autio-cosmos-db
+    name: test-k8-cosmos
   resource:
     id: test-db
   options:
     autoscaleSettings:
-      maxThroughput: 100
+      maxThroughput: 400

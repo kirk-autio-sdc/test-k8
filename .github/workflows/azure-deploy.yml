@@ -57,10 +57,19 @@ jobs:
 
       - name: Verify ASO Resources
         run: |
-          kubectl -n azure-resources get all
+          kubectl -n aso-system get all
+
+      - name: Build API images
+        run: |
+          docker build -f K8Test/Dockerfile
+          docker build -f K8OtherAPI/Dockerfile
+          
+      - name: Deploy API manifests
+        run: |
+          kubectl apply -f workflows/deployments.yml
 
       - name: Wait for resources to be ready
         run: |
-          kubectl wait --for=condition=Ready sqldatabase.documentdb.azure.com/test-db
+          kubectl wait --for=condition=Ready sqldatabase.documentdb.azure.com/test-db -n aso-system
           
     
