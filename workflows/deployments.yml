@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: test-api-container
-          image: testAPI
+          image: k8test-api
           imagePullPolicy: Never
           env:
             - name: COSMOS_CONNECTION
@@ -43,7 +43,7 @@ spec:
     spec:
       containers:
         - name: other-api-container
-          image: otherAPI
+          image: k8other-api
           imagePullPolicy: Never
           env:
             - name: COSMOS_CONNECTION
