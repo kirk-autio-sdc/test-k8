@@ -66,14 +66,14 @@ jobs:
       - name: Build K8Test image
         working-directory: K8Test
         run: |
-          docker build -t testk8registry/k8test-api .
-          docker push testk8registry/k8test-api
+          docker build -t testk8registry.azurecr.io/k8test-api .
+          docker push testk8registry.azurecr.io/k8test-api
           
       - name: Build K8OtherApi image
         working-directory: K8OtherAPI
         run: |
-          docker build -t testk8registry/k8other-api .
-          docker push testk8registry/k8other-api
+          docker build -t testk8registry.azurecr.io/k8other-api .
+          docker push testk8registry.azurecr.io/k8other-api
           
       - name: Deploy API manifests
         run: |
