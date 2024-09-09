@@ -49,7 +49,7 @@ jobs:
             --create-namespace \
             --namespace aso-system \
             --set crds.enabled=true \
-            --set crdPattern='resources.azure.com/*;containerservice.azure.com/*;keyvault.azure.com/*;managedidentity.azure.com/*;eventhub.azure.com/*;documentdb.azure.com/*;containerregistries.microsoft.containerregistry.azure.com/*'                           
+            --set crdPattern='resources.azure.com/*;containerservice.azure.com/*;keyvault.azure.com/*;managedidentity.azure.com/*;eventhub.azure.com/*;documentdb.azure.com/*'                           
         
       - name: Apply K8 manifests
         run: |
@@ -59,25 +59,21 @@ jobs:
         run: |
           kubectl -n aso-system get all
           
-      - name: Wait for resources to be ready
-        run: |
-          kubectl wait --for=condition=Ready -n aso-system ContainerRegistry testk8aksregistry
-          
       - name: Login to Container Registry
         run: |
-          az acr login --name testk8aksregistry
+          az acr login --name testk8registry
 
       - name: Build K8Test image
         working-directory: K8Test
         run: |
-          docker build -t testk8aksregistry/k8test-api .
-          docker push testk8aksregistry/k8test-api
+          docker build -t testk8registry/k8test-api .
+          docker push testk8registry/k8test-api
           
       - name: Build K8OtherApi image
         working-directory: K8OtherAPI
         run: |
-          docker build -t testk8aksregistry/k8other-api .
-          docker push testk8aksregistry/k8other-api
+          docker build -t testk8registry/k8other-api .
+          docker push testk8registry/k8other-api
           
       - name: Deploy API manifests
         run: |

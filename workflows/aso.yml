@@ -7,20 +7,7 @@ spec:
   location: canadaeast
   tags:
     environment: DEV
-  
----
-
-apiVersion: microsoft.containerregistry.azure.com/v1beta1
-kind: ContainerRegistry
-metadata:
-  name: testk8aksregistry
-  namespace: aso-system
-spec:
-  location: canadaeast
-  sku: Basic
-  resourceGroup: test-k8-rg
-  adminUserEnabled: true
-  
+ 
 ---
 
 apiVersion: documentdb.azure.com/v1api20231115
