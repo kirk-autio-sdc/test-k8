@@ -27,7 +27,7 @@ jobs:
         
       - name: Set AKS context
         run: |
-          az aks get-credentials --resource-group autio-web --name test-k8 --overwrite-existing
+          az aks get-credentials --resource-group test-k8-rg --name test-k8 --overwrite-existing
 
       - name: Set up kubelogin for non-interactive login
         run: |
