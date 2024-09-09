@@ -61,8 +61,8 @@ jobs:
 
       - name: Build API images
         run: |
-          docker build -f K8Test/Dockerfile
-          docker build -f K8OtherAPI/Dockerfile
+          docker build -f K8Test/Dockerfile .
+          docker build -f K8OtherAPI/Dockerfile .
           
       - name: Deploy API manifests
         run: |
