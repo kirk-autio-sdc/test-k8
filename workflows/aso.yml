@@ -18,7 +18,7 @@ metadata:
 spec:
   location: canadaeast
   owner:
-    name: test-k8
+    name: test-k8-rg
   kind: GlobalDocumentDB
   databaseAccountOfferType: Standard
   locations:
@@ -36,7 +36,7 @@ spec:
 apiVersion: documentdb.azure.com/v1api20231115
 kind: SqlDatabase
 metadata:
-  name: test-db
+  name: test-k8-rg
   namespace: aso-system
 spec:
   location: canadaeast

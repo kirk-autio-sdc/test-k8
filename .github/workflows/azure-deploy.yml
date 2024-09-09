@@ -64,8 +64,8 @@ jobs:
         run: docker build -t k8test-api .
           
       - name: Build K8OtherApi image
-        working-directory: k8other-api
-        run: docker build -f K8OtherAPI/Dockerfile .
+        working-directory: K8OtherAPI
+        run: docker build -t k8other-api .
           
       - name: Deploy API manifests
         run: |
