@@ -51,14 +51,20 @@ jobs:
             --set crds.enabled=true \
             --set crdPattern='resources.azure.com/*;containerservice.azure.com/*;keyvault.azure.com/*;managedidentity.azure.com/*;eventhub.azure.com/*;documentdb.azure.com/*'                           
         
-      - name: Store values in secret file
+      - name: Store values in secret file if not already existing
         run: |
-          kubectl create secret generic aso-credential \
-            --namespace aso-system \
-            --from-literal=AZURE_CLIENT_ID=${{secrets.AZURE_CLIENT_ID}} \
-            --from-literal=AZURE_CLIENT_SECRET=${{secrets.AZURE_CLIENT_SECRET}} \
-            --from-literal=AZURE_TENANT_ID=${{secrets.AZURE_TENANT_ID}} \
-            --from-literal=AZURE_SUBSCRIPTION_ID=${{secrets.AZURE_SUBSCRIPTION_ID}}
+          SECRET_NAME="aso-credential"
+          NAMESPACE="aso-system"
+          if ! kubectl get secret "$SECRET_NAME" -n "$NAMESPACE" > /dev/null 2>&1; then          
+            kubectl create secret generic "$SECRET_NAME" \
+              --namespace "$NAMESPACE" \
+              --from-literal=AZURE_CLIENT_ID=${{secrets.AZURE_CLIENT_ID}} \
+              --from-literal=AZURE_CLIENT_SECRET=${{secrets.AZURE_CLIENT_SECRET}} \
+              --from-literal=AZURE_TENANT_ID=${{secrets.AZURE_TENANT_ID}} \
+              --from-literal=AZURE_SUBSCRIPTION_ID=${{secrets.AZURE_SUBSCRIPTION_ID}}
+          else
+            echo "Secret already exists, skipping creation."
+          fi
           
       - name: Apply K8 manifests
         run: |
