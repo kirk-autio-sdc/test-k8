@@ -45,6 +45,7 @@ jobs:
         run: |
           kubectl create secret generic aso-credential \
             --namespace aso-system \
+            --create-namespace
             --from-literal=AZURE_CLIENT_ID=${{secrets.AZURE_CLIENT_ID}} \
             --from-literal=AZURE_CLIENT_SECRET=${{secrets.AZURE_CLIENT_SECRET}} \
             --from-literal=AZURE_TENANT_ID=${{secrets.AZURE_TENANT_ID}} \
