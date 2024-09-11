@@ -1,3 +1,12 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: aso-system
+  labels:
+    name: aso-system
+
+---
+
 apiVersion: resources.azure.com/v1api20200601
 kind: ResourceGroup
 metadata:
@@ -10,40 +19,40 @@ spec:
  
 ---
 
-apiVersion: documentdb.azure.com/v1api20231115
-kind: DatabaseAccount
-metadata:
-  name: test-k8-cosmos
-  namespace: aso-system
-spec:
-  location: canadaeast
-  owner:
-    name: test-k8-rg
-  kind: GlobalDocumentDB
-  databaseAccountOfferType: Standard
-  locations:
-    - locationName: canadaeast
-  consistencyPolicy:
-    defaultConsistencyLevel: Session
-  operatorSpec:
-    secrets:
-      primaryMasterKey:
-        name: azure-keys
-        key: cosmos-key
-
----
-
-apiVersion: documentdb.azure.com/v1api20231115
-kind: SqlDatabase
-metadata:
-  name: test-k8-rg
-  namespace: aso-system
-spec:
-  location: canadaeast
-  owner:
-    name: test-k8-cosmos
-  resource:
-    id: test-db
-  options:
-    autoscaleSettings:
-      maxThroughput: 400
+#apiVersion: documentdb.azure.com/v1api20231115
+#kind: DatabaseAccount
+#metadata:
+#  name: test-k8-cosmos
+#  namespace: aso-system
+#spec:
+#  location: canadaeast
+#  owner:
+#    name: test-k8-rg
+#  kind: GlobalDocumentDB
+#  databaseAccountOfferType: Standard
+#  locations:
+#    - locationName: canadaeast
+#  consistencyPolicy:
+#    defaultConsistencyLevel: Session
+#  operatorSpec:
+#    secrets:
+#      primaryMasterKey:
+#        name: azure-keys
+#        key: cosmos-key
+#
+#---
+#
+#apiVersion: documentdb.azure.com/v1api20231115
+#kind: SqlDatabase
+#metadata:
+#  name: test-k8-rg
+#  namespace: aso-system
+#spec:
+#  location: canadaeast
+#  owner:
+#    name: test-k8-cosmos
+#  resource:
+#    id: test-db
+#  options:
+#    autoscaleSettings:
+#      maxThroughput: 400

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: test-api-container
-          image: testk8registry.azurecr.io/k8test-api 
+          image: asdccontainer.azurecr.io/k8test-api 
           ports:
             - containerPort: 8080
 
@@ -36,6 +36,6 @@ spec:
     spec:
       containers:
         - name: other-api-container
-          image: testk8registry.azurecr.io/k8other-api
+          image: asdccontainer.azurecr.io/k8other-api
           ports:
             - containerPort: 8080
