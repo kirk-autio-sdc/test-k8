@@ -27,7 +27,7 @@ jobs:
         
       - name: Set AKS context
         run: |
-          az aks get-credentials --resource-group test-k8-rg --name test-k8-cluster --overwrite-existing
+          az aks get-credentials --resource-group test-k8-rg --name test-k8-aks --overwrite-existing
 
       - name: Set up kubelogin for non-interactive login
         run: |
