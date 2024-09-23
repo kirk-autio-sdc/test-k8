@@ -36,9 +36,9 @@ jobs:
       - name: Install AKS if it doesn't exist
         run: |
           # Check if AKS exists
-          AKS_EXISTS=$(az aks show --name $AKS_NAME --resource-group $RESOURCE_GROUP --query "name" -o tsv || echo "no")
+          AKS_EXISTS=$(az aks list --resource-group $RESOURCE_GROUP --query "[?name=='$AKS_NAME'].name" -o tsv)
           
-          if [[ "$AKS_EXISTS" == "no" ]]; then
+          if [ -z "$AKS_EXISTS" ]; then
             echo "AKS resource does not exist.  Creating now..."
             az aks create \
               --resource-group $RESOURCE_GROUP \
