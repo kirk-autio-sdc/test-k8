@@ -9,6 +9,9 @@ on:
 jobs:
   setup-azure:
     runs-on: ubuntu-latest
+    env:
+      RESOURCE_GROUP = "test-k8-rg"
+      AKS_NAME = "test-k8-aks"
       
     steps:
       - name: Get code
@@ -17,6 +20,34 @@ jobs:
       - name: Login to Azure using Service Principal
         run: |
           az login --service-principal --username ${{ secrets.AZURE_CLIENT_ID }} --password ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+
+      - name: Create Resource Group
+        run: |
+          RG_EXISTS=$(az group exists --name ${{RESOURCE_GROUP}})
+
+          # Create the Resource Group if it does not exist
+          if [ "$RG_EXISTS" = false ]; then
+            echo "Resource group ${{RESOURCE_GROUP}} does not exist. Creating now..."
+            az group create --name ${{RESOURCE_GROUP}} --location canadaeast
+          fi
+          
+      - name: Install AKS if it doesn't exist
+        run: |
+          AKS_NAME="test-k8-aks"
+          RG_NAME="test-k8-rg"
+          # Check if AKS exists
+          AKS_EXISTS=$(az aks show --name $AKS_NAME --resource-group $RG_NAME --query "name" -o tsv || echo "no")
+          
+          if [[ "$AKS_EXISTS" == "no" ]]; then
+            echo "AKS resource does not exist.  Creating now..."
+            az aks create \
+              --resource-group test-k8-rg \
+              --name test-k8-aks \
+              --node-count 1 \
+              --vm-node-zie A2_v2 \
+              --enable-addons monitoring \
+              --generate-ssh-keys
+          fi
 
       - name: Install kubelogin
         uses: azure/use-kubelogin@v1
@@ -62,10 +93,12 @@ jobs:
               --from-literal=AZURE_CLIENT_SECRET=${{secrets.AZURE_CLIENT_SECRET}} \
               --from-literal=AZURE_TENANT_ID=${{secrets.AZURE_TENANT_ID}} \
               --from-literal=AZURE_SUBSCRIPTION_ID=${{secrets.AZURE_SUBSCRIPTION_ID}}
-          else
-            echo "Secret already exists, skipping creation."
           fi
           
+      - name: Install NGINX
+        run: |
+          helm upgrade --reuse-values --install nginx-ingress ingress-nginx/ingress-nginx --namespace ingress-basic --create-namespace      
+      
       - name: Apply K8 manifests
         run: |
           kubectl apply -f workflows/aso.yml
