@@ -8,13 +8,13 @@ on:
     
 env:
   RESOURCE_GROUP: test-k8-rg
+  ACR_NAME: asdccontainer
   AKS_NAME: test-k8-aks
     
 jobs:
   setup-azure:
     runs-on: ubuntu-latest
   
-      
     steps:
       - name: Get code
         uses: actions/checkout@v4
@@ -33,6 +33,15 @@ jobs:
             az group create --name $RESOURCE_GROUP --location canadaeast
           fi
           
+      - name: Create Container Registry (ACR) if it doesn't exist
+        run: |
+          ACR_EXISTS=$(az acr list --output tsv)
+          
+          if [ -z "$ACR_EXISTS" ]; then
+            echo "Container registry does not exist.  Creating now..."
+            az acr create --resource-group $RESOURCE_GROUP --name $ACR_NAME --sku Basic
+          fi
+          
       - name: Install AKS if it doesn't exist
         run: |
           # Check if AKS exists
@@ -45,6 +54,7 @@ jobs:
               --name $AKS_NAME \
               --node-count 1 \
               --node-vm-size standard_a2_v2 \
+              --attach-acr $ACR_NAME \
               --enable-addons monitoring \
               --generate-ssh-keys
           fi
@@ -111,19 +121,19 @@ jobs:
           
       - name: Login to Container Registry
         run: |
-          az acr login --name asdccontainer
+          az acr login --name $ACR_NAME
 
       - name: Build K8Test image
         working-directory: K8Test
         run: |
-          docker build -t asdccontainer.azurecr.io/k8test-api .
-          docker push asdccontainer.azurecr.io/k8test-api
+          docker build -t $ACR_NAME.azurecr.io/k8test-api .
+          docker push $ACR_NAME.azurecr.io/k8test-api
           
       - name: Build K8OtherApi image
         working-directory: K8OtherAPI
         run: |
-          docker build -t asdccontainer.azurecr.io/k8other-api .
-          docker push asdccontainer.azurecr.io/k8other-api
+          docker build -t $ACR_NAME.azurecr.io/k8other-api .
+          docker push $ACR_NAME.azurecr.io/k8other-api
           
       - name: Deploy API manifests
         run: |
