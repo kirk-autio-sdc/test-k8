@@ -99,7 +99,7 @@ jobs:
         run: |
           helm repo add nginx-stable https://helm.nginx.com/stable
           helm repo update
-          helm upgrade --install --reuse-values --install api-ingress stable/ingress-nginx --namespace ingress-basic --create-namespace      
+          helm upgrade --install --reuse-values --install api-ingress nginx-stable/ingress-nginx --namespace ingress-basic --create-namespace      
       
       - name: Apply K8 manifests
         run: |
