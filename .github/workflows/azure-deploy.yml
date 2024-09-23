@@ -5,13 +5,15 @@ on:
   push:
     branches:
       - main
-  
+    
+env:
+  RESOURCE_GROUP: test-k8-rg
+  AKS_NAME: test-k8-aks
+    
 jobs:
   setup-azure:
     runs-on: ubuntu-latest
-    env:
-      RESOURCE_GROUP = "test-k8-rg"
-      AKS_NAME = "test-k8-aks"
+  
       
     steps:
       - name: Get code
@@ -23,26 +25,24 @@ jobs:
 
       - name: Create Resource Group
         run: |
-          RG_EXISTS=$(az group exists --name ${{RESOURCE_GROUP}})
+          RG_EXISTS=$(az group exists --name $RESOURCE_GROUP)
 
           # Create the Resource Group if it does not exist
           if [ "$RG_EXISTS" = false ]; then
-            echo "Resource group ${{RESOURCE_GROUP}} does not exist. Creating now..."
-            az group create --name ${{RESOURCE_GROUP}} --location canadaeast
+            echo "Resource group $RESOURCE_GROUP does not exist. Creating now..."
+            az group create --name $RESOURCE_GROUP --location canadaeast
           fi
           
       - name: Install AKS if it doesn't exist
         run: |
-          AKS_NAME="test-k8-aks"
-          RG_NAME="test-k8-rg"
           # Check if AKS exists
-          AKS_EXISTS=$(az aks show --name $AKS_NAME --resource-group $RG_NAME --query "name" -o tsv || echo "no")
+          AKS_EXISTS=$(az aks show --name $AKS_NAME --resource-group $RESOURCE_GROUP --query "name" -o tsv || echo "no")
           
           if [[ "$AKS_EXISTS" == "no" ]]; then
             echo "AKS resource does not exist.  Creating now..."
             az aks create \
-              --resource-group test-k8-rg \
-              --name test-k8-aks \
+              --resource-group $RESOURCE_GROUP \
+              --name $AKS_NAME \
               --node-count 1 \
               --vm-node-zie A2_v2 \
               --enable-addons monitoring \
@@ -58,7 +58,7 @@ jobs:
         
       - name: Set AKS context
         run: |
-          az aks get-credentials --resource-group test-k8-rg --name test-k8-aks --overwrite-existing
+          az aks get-credentials --resource-group $RESOURCE_GROUP --name $AKS_NAME --overwrite-existing
 
       - name: Set up kubelogin for non-interactive login
         run: |
