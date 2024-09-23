@@ -97,9 +97,9 @@ jobs:
           
       - name: Install NGINX
         run: |
-          helm repo add nginx-stable https://helm.nginx.com/stable
+          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
           helm repo update
-          helm upgrade --install --reuse-values --install api-ingress nginx-stable/ingress-nginx --namespace ingress-basic --create-namespace      
+          helm upgrade --install --reuse-values --install api-ingress ingress-nginx/ingress-nginx --namespace ingress-basic --create-namespace      
       
       - name: Apply K8 manifests
         run: |
