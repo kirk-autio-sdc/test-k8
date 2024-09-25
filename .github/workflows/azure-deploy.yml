@@ -55,8 +55,9 @@ jobs:
               --name $AKS_NAME \
               --node-count 1 \
               --node-vm-size standard_a2_v2 \
-              --attach-acr $ACR_NAME \
+              --enable-managed-identity \
               --enable-addons monitoring \
+              --enable-addons azure-keyvault-secrets-provider \
               --enable-app-routing \
               --generate-ssh-keys
           fi

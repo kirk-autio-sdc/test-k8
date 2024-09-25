@@ -17,7 +17,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 
-app.MapGet("/test", () => "test")
+app.MapGet("/test", () => Environment.GetEnvironmentVariable("test"))
     .WithName("GetTestText")
     .WithOpenApi();
 

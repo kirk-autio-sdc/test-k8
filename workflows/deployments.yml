@@ -17,6 +17,17 @@ spec:
           image: asdccontainer.azurecr.io/k8test-api 
           ports:
             - containerPort: 8080
+          volumeMounts:
+            - name: secrets-store
+              mountPath: "/mnt/secrets-store"
+              readOnly: true 
+      volumes:
+        - name: secrets-store
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: asdc-secret-vault
 
 ---
 
