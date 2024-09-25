@@ -51,7 +51,7 @@ jobs:
             echo "AKS resource does not exist.  Creating now..."
             az aks create \
               --resource-group $RESOURCE_GROUP \
-              --location candadaeast \
+              --location canadaeast \
               --name $AKS_NAME \
               --node-count 1 \
               --node-vm-size standard_a2_v2 \
