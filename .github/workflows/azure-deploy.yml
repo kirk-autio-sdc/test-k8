@@ -76,9 +76,15 @@ jobs:
         run: |
           kubelogin convert-kubeconfig -l azurecli
           
-      - name: Install Cert Manager using Helm
+      - name: Prepare helm repos
         run: |
           helm repo add jetstack https://charts.jetstack.io --force-update
+          helm repo add aso2 https://raw.githubusercontent.com/Azure/azure-service-operator/main/v2/charts
+          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+          helm repo update
+          
+      - name: Install Cert Manager using Helm
+        run: |
           helm upgrade --install cert-manager jetstack/cert-manager \
             --namespace cert-manager \
             --create-namespace \
@@ -86,8 +92,6 @@ jobs:
           
       - name: Install ASO using Helm
         run: |
-          helm repo add aso2 https://raw.githubusercontent.com/Azure/azure-service-operator/main/v2/charts
-          helm repo update
           helm upgrade --install azure-service-operator aso2/azure-service-operator \
             --create-namespace \
             --namespace aso-system \
@@ -109,8 +113,6 @@ jobs:
           
       - name: Install NGINX
         run: |
-          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-          helm repo update
           helm upgrade --install --reuse-values --install api-ingress ingress-nginx/ingress-nginx --namespace ingress-basic --create-namespace      
       
       - name: Apply K8 manifests
